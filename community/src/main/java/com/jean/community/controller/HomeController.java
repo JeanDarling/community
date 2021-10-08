@@ -1,6 +1,7 @@
 package com.jean.community.controller;
 
 import com.jean.community.entity.DiscussPost;
+import com.jean.community.entity.Page;
 import com.jean.community.entity.User;
 import com.jean.community.service.DiscusspostService;
 import com.jean.community.service.UserService;
@@ -30,14 +31,19 @@ public class HomeController {
     private UserService userService;
 
     @RequestMapping(path="/index",method = RequestMethod.GET)
-    public String getIndexPage(Model model) {
-        List<DiscussPost> lists = discusspostService.findDiscussPosts(0, 0, 10);
+    public String getIndexPage(Model model , Page page) {
+//        方法调用前，SpringMvc会自动实例化Model和page,并将Page注入Model
+//        所以，在thymeleaf中就可以直接访问Page对象中的数据。
+        page.setRows(discusspostService.findDiscussPosts(0));//首页查询多少页
+        page.setPath("/index");
+
+        List<DiscussPost> lists = discusspostService.findDiscussPosts(0, page.getOffset(), page.getLimit());
         List<Map<String,Object>> discussPosts = new ArrayList<>();
         if (lists != null) {
             for(DiscussPost post:lists){
                 Map<String, Object> map = new HashMap<>();
                 map.put("post",post);
-                User user = userService.findUserById(post.getId());
+                User user = userService.findUserById(post.getUserId());
                 map.put("user",user);
                 discussPosts.add(map);
             }

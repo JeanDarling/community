@@ -9,21 +9,41 @@ public class User {
     private String  salt;
     private String  email;
     private int type;
+    private int status;
+    private String activationCode;
     private String  headerUrl;
     private Date creatTime;
 
     public User() {
     }
 
-    public User(Integer id, String username, String password, String salt, String email, int type, String headerUrl, Date creatTime) {
+    public User(Integer id, String username, String password, String salt, String email, int type, int status, String activationCode, String headerUrl, Date creatTime) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.salt = salt;
         this.email = email;
         this.type = type;
+        this.status = status;
+        this.activationCode = activationCode;
         this.headerUrl = headerUrl;
         this.creatTime = creatTime;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public String getActivationCode() {
+        return activationCode;
+    }
+
+    public void setActivationCode(String activationCode) {
+        this.activationCode = activationCode;
     }
 
     public Integer getId() {
@@ -99,6 +119,8 @@ public class User {
                 ", salt='" + salt + '\'' +
                 ", email='" + email + '\'' +
                 ", type=" + type +
+                ", status=" + status +
+                ", activationCode='" + activationCode + '\'' +
                 ", headerUrl='" + headerUrl + '\'' +
                 ", creatTime=" + creatTime +
                 '}';
