@@ -1,6 +1,8 @@
 package com.jean.community.service;
 
+import com.jean.community.dao.LoginTicketMapper;
 import com.jean.community.dao.UserMapper;
+import com.jean.community.entity.LoginTicket;
 import com.jean.community.entity.User;
 import com.jean.community.util.CommunityConstant;
 import com.jean.community.util.CommunityUtil;
@@ -35,6 +37,9 @@ public class UserService implements CommunityConstant {
 
     @Autowired
     private TemplateEngine templateEngine;
+
+    @Autowired
+    private LoginTicketMapper loginTicketMapper;
 
     @Value("${community.path.domain}")
     private String domain;
@@ -113,5 +118,49 @@ public class UserService implements CommunityConstant {
         }else {
             return ACTIVATION_FAILURE;
         }
+    }
+
+    public Map<String, Object> login(String username, String password, int expiredSeconds){
+        Map<String, Object> map = new HashMap<>();
+        //空值处理
+        if (StringUtils.isBlank(username)) {
+            map.put("usernameMSG","账号不能为空");
+            return map;
+        }
+        if (StringUtils.isBlank(password)) {
+            map.put("passwordMSG","密码不能为空");
+            return map;
+        }
+        //验证用户名密码
+        User user = userMapper.selectByName(username);
+        if (user == null ) {
+            map.put("usernameMSG", "该账号不存在");
+            return map;
+        }
+        //验证状态
+        if (user.getStatus() == 0) {
+            map.put("usernameMSG", "该账号未激活");
+            return map;
+        }
+        // 验证密码
+        password = CommunityUtil.md5(password + user.getSalt());
+        if(!user.getPassword().equals(password)){
+            map.put("passwordMSG","密码不正确");
+            return map;
+        }
+        //生成登录凭证
+        LoginTicket loginTicket = new LoginTicket();
+        loginTicket.setUserId(user.getId());
+        loginTicket.setTicket(CommunityUtil.gennerateUUID());
+        loginTicket.setStatus(0);
+        loginTicket.setExpired(new Date(System.currentTimeMillis() + expiredSeconds * 1000));
+        loginTicketMapper.insertLoginTicket(loginTicket);
+
+        map.put("ticket",loginTicket.getTicket());
+        return map;
+    }
+
+    public void logout(String ticket) {
+        loginTicketMapper.updateStatus(ticket , 1);
     }
 }
