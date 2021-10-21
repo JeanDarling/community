@@ -40,4 +40,23 @@ public interface CommunityConstant {
     */
 
     int REMEMBER_EXPIRED_SECONDS = 3600 * 24 *100;
+
+    /**
+    * @Description:  实体类型,帖子
+    * @Param:
+    * @return:
+    * @Author: The High Priestess
+    * @Date: 2021/10/17
+    */
+
+    int ENTITY_TYPE_POST = 1;
+
+    /**
+    * @Description: 实体类型，评论
+    * @Param:
+    * @return:
+    * @Author: The High Priestess
+    * @Date: 2021/10/17
+    */
+    int ENTITY_TYPE_COMMENT = 2;
 }
