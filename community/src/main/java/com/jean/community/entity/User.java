@@ -1,5 +1,7 @@
 package com.jean.community.entity;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
 public class User {
@@ -12,12 +14,14 @@ public class User {
     private int status;
     private String activationCode;
     private String  headerUrl;
-    private Date creatTime;
+
+  //  @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    private Date createTime;
 
     public User() {
     }
 
-    public User(Integer id, String username, String password, String salt, String email, int type, int status, String activationCode, String headerUrl, Date creatTime) {
+    public User(Integer id, String username, String password, String salt, String email, int type, int status, String activationCode, String headerUrl, Date createTime) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -27,7 +31,7 @@ public class User {
         this.status = status;
         this.activationCode = activationCode;
         this.headerUrl = headerUrl;
-        this.creatTime = creatTime;
+        this.createTime = createTime;
     }
 
     public int getStatus() {
@@ -102,12 +106,12 @@ public class User {
         this.headerUrl = headerUrl;
     }
 
-    public Date getCreatTime() {
-        return creatTime;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setCreatTime(Date creatTime) {
-        this.creatTime = creatTime;
+    public void setCreateTime(Date creatTime) {
+        this.createTime = creatTime;
     }
 
     @Override
@@ -122,7 +126,7 @@ public class User {
                 ", status=" + status +
                 ", activationCode='" + activationCode + '\'' +
                 ", headerUrl='" + headerUrl + '\'' +
-                ", creatTime=" + creatTime +
+                ", createTime=" + createTime +
                 '}';
     }
 }
