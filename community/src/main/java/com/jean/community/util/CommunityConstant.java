@@ -59,4 +59,11 @@ public interface CommunityConstant {
     * @Date: 2021/10/17
     */
     int ENTITY_TYPE_COMMENT = 2;
+
+    /**
+     * @author The High Priestess
+     * @date 2021/11/3 10:43
+     * @description : 实体用户类型，用户
+     */
+    int ENTITY_TYPE_USER = 3;
 }

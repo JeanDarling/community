@@ -3,11 +3,14 @@ package com.jean.community.controller;
 import com.jean.community.annotation.LoginRequired;
 import com.jean.community.dao.UserMapper;
 import com.jean.community.entity.User;
+import com.jean.community.service.FollowService;
 import com.jean.community.service.LikeService;
 import com.jean.community.service.UserService;
+import com.jean.community.util.CommunityConstant;
 import com.jean.community.util.CommunityUtil;
 import com.jean.community.util.HostHolder;
 import org.apache.commons.lang3.StringUtils;
+import org.aspectj.weaver.ast.Var;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +32,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/user")
-public class UserController {
+public class UserController implements CommunityConstant {
 
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
@@ -50,6 +53,9 @@ public class UserController {
 
     @Autowired
     private LikeService likeService;
+
+    @Autowired
+    private FollowService followService;
 
     @LoginRequired
     @RequestMapping(path = "/setting", method = RequestMethod.GET)
@@ -127,6 +133,7 @@ public class UserController {
         }
     }
 
+    // 个人主页
     @RequestMapping(path = "/profile/{userId}", method = RequestMethod.GET)
     public String getProfilePage(@PathVariable("userId") int userId, Model model) {
         User user = userService.findUserById(userId);
@@ -138,6 +145,19 @@ public class UserController {
         // 点赞数量
         int count = likeService.findUserLikeCount(userId);
         model.addAttribute("userlike", count);
+
+        // 关注数量
+        long followeeCount = followService.findFolloweeCount(userId, ENTITY_TYPE_USER);
+        model.addAttribute("followeeCount", followeeCount);
+        // 粉丝数量
+        long followerCount = followService.findFollowerCount(ENTITY_TYPE_USER,userId);
+        model.addAttribute("followerCount", followerCount);
+        // 是否已经关注
+        boolean hasFollowed = false;
+        if (hostHolder.getUser() != null) {
+            hasFollowed = followService.hasFollowed(hostHolder.getUser().getId(), ENTITY_TYPE_USER, userId);
+        }
+        model.addAttribute("hasFollowed", hasFollowed);
 
         return "/site/profile";
     }
