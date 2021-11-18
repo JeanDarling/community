@@ -1,7 +1,9 @@
 package com.jean.community.controller;
 
+import com.jean.community.entity.Event;
 import com.jean.community.entity.Page;
 import com.jean.community.entity.User;
+import com.jean.community.event.EventProducer;
 import com.jean.community.service.FollowService;
 import com.jean.community.service.UserService;
 import com.jean.community.util.CommunityConstant;
@@ -34,11 +36,23 @@ public class FollowController implements CommunityConstant {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private EventProducer eventProducer;
+
+
     @RequestMapping(path = "/follow", method = RequestMethod.POST)
     @ResponseBody
     public String follow(int entityType, int entityId) {
         User user = hostHolder.getUser();
         followService.follow(user.getId(),entityType,entityId);
+        // 触发关注事件
+        Event event = new Event()
+                .setTopic(TOPIC_FOLLOW)
+                .setEntityType(entityType)
+                .setEntityId(entityId)
+                .setUserId(user.getId())
+                .setEntityUserId(entityId);
+        eventProducer.fireEvent(event);
 
         return CommunityUtil.getJSONString(0,"已关注!");
     }

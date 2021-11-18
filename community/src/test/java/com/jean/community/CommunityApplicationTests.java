@@ -1,7 +1,7 @@
 package com.jean.community;
 
 import com.jean.community.dao.TestDao;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.springframework.beans.BeansException;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.test.context.SpringBootTest;
