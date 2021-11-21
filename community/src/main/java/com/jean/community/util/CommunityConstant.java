@@ -89,6 +89,12 @@ public interface CommunityConstant {
     String TOPIC_FOLLOW = "follow";
 /**
  * @author The High Priestess
+ * @date 2021/11/18 16:56
+ * @description : 主题：发帖
+ */
+    String TOPIC_PUBLISH = "publish";
+/**
+ * @author The High Priestess
  * @date 2021/11/4 21:47
  * @description : 系统用户ID
  */

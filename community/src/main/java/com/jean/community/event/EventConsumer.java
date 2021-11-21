@@ -2,14 +2,18 @@ package com.jean.community.event;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.jean.community.entity.DiscussPost;
 import com.jean.community.entity.Event;
 import com.jean.community.entity.Message;
+import com.jean.community.service.DiscusspostService;
+import com.jean.community.service.ElasticsearchService;
 import com.jean.community.service.MessageService;
 import com.jean.community.util.CommunityConstant;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
@@ -32,6 +36,12 @@ public class EventConsumer implements CommunityConstant {
 
     @Autowired
     private MessageService messageService;
+
+    @Autowired
+    private DiscusspostService discusspostService;
+
+    @Autowired
+    private ElasticsearchService elasticsearchService;
 
     @KafkaListener(topics = {TOPIC_COMMENT,TOPIC_LIKE,TOPIC_FOLLOW})
     public void handlerCommentMessage(ConsumerRecord record) {
@@ -66,8 +76,24 @@ public class EventConsumer implements CommunityConstant {
         message.setContent(JSONObject.toJSONString(content));
         messageService.addMessage(message);
 
+    }
 
+    // 消费发帖事件：
+    @KafkaListener(topics = {TOPIC_PUBLISH})
+    public void handlePublishMessage(ConsumerRecord record) {
+        if(record == null || record.value() == null ) {
+            log.error("消息的内容为空！");
+            return;
+        }
 
+        Event event = JSONObject.parseObject(record.value().toString(), Event.class);
+        if(event == null ) {
+            log.error("消息格式错误！");
+            return;
+        }
+
+        DiscussPost post = discusspostService.findDiscussPostByID(event.getEntityId());
+        elasticsearchService.saveDiscussPost(post);
     }
 
 }
