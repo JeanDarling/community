@@ -2,6 +2,8 @@ package com.jean.community.util;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import java.nio.file.Watchable;
+
 /**
  * @author The High Priestess
  * @date 2021/10/8 22:55
@@ -99,4 +101,24 @@ public interface CommunityConstant {
  * @description : 系统用户ID
  */
     int SYSTEM_USER_ID= 1;
+/**
+ * @author The High Priestess
+ * @date 2021/11/21 10:33
+ * @description : 权限：普通用户
+ */
+    String AUTHORITY_USER = "user";
+
+    /**
+     * @author The High Priestess
+     * @date 2021/11/21 10:35
+     * @description : 权限：管理员
+     */
+    String AUTHORITY_ADMIN = "admin";
+
+    /**
+     * @author The High Priestess
+     * @date 2021/11/21 10:35
+     * @description : 权限：版主
+     */
+    String AUTHORITY_MODERATOR = "moderator";
 }
