@@ -54,6 +54,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements Comm
                         AUTHORITY_USER,
                         AUTHORITY_MODERATOR
                 )
+                .antMatchers(
+                        "/discuss/top",
+                        "/discuss/wonderful"
+                )
+                .hasAnyAuthority(
+                        // 版主能访问上述权限
+                        AUTHORITY_MODERATOR
+                )
+                .antMatchers(
+                        "/discuss/delete"
+                )
+                .hasAnyAuthority(
+                        // 管理员能删除
+                        AUTHORITY_ADMIN
+                )
                 //除了这些请求外，其他请求统统允许
                 .anyRequest().permitAll()
                 .and().csrf().disable(); // 禁用csrf,不会增加csrf攻击的检查
@@ -64,7 +79,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements Comm
                     // 没有登录
                     @Override
                     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException e) throws IOException, ServletException {
-                        String xRequestedWith = request.getHeader("s-requested-with");
+                        String xRequestedWith = request.getHeader("x-requested-with");
                         if ("XMLHttpRequest".equals(xRequestedWith)) {  // 说明这是一个异步请求
                             // 生命返回类型是普通字符串
                             response.setContentType("application/plain;charset=utf-8");
@@ -81,7 +96,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements Comm
                     // 权限不足
                     @Override
                     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException e) throws IOException, ServletException {
-                        String xRequestedWith = request.getHeader("s-requested-with");
+                        String xRequestedWith = request.getHeader("x-requested-with");
                         if ("XMLHttpRequest".equals(xRequestedWith)) {  // 说明这是一个异步请求
                             // 生命返回类型是普通字符串
                             response.setContentType("application/plain;charset=utf-8");
