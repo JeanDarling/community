@@ -50,7 +50,7 @@ public class MapperTests {
 
     @Test
     public void testDiscussPost(){
-        List<DiscussPost> discussPosts = discussPostMapper.selectDiscussPost(0, 0, 10);
+        List<DiscussPost> discussPosts = discussPostMapper.selectDiscussPost(0, 0, 10,0);
         discussPosts.forEach(el-> System.out.println(el));
 
         int i = discussPostMapper.selectDiscussPostRows(0);
