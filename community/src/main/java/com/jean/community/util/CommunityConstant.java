@@ -102,6 +102,13 @@ public interface CommunityConstant {
      * @description : 主题：删帖
      */
     String TOPIC_DELETE = "delete";
+
+    /**
+     * @author The High Priestess
+     * @date 2021/11/27 14:22
+     * @description : 主题： 分享
+     */
+    String TOPIC_SHARE = "share";
 /**
  * @author The High Priestess
  * @date 2021/11/4 21:47
